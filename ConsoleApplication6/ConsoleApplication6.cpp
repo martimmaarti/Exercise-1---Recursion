@@ -15,7 +15,6 @@ public:
     SingleLinkedList() {
         head = nullptr;
         size = 0;
-
     }
 
     void insert(int value) {
@@ -31,7 +30,6 @@ public:
             head = newNode;
         }
 
-
         size++;
     }
 
@@ -45,8 +43,20 @@ public:
         cout << endl;
     }
 
-    void recursivePrint(Node* n) {
+    void recursiveErase(Node*& n) {
+        if (n == nullptr) {
+            return;
+        }
 
+        Node* nextNode = n->next; // Guardar el puntero al siguiente nodo
+        delete n;                 // Eliminar el nodo actual
+        n = nextNode;             // Avanzar al siguiente nodo
+
+        size--;
+        recursiveErase(n); // Recursivamente eliminar el siguiente nodo
+    }
+
+    void recursivePrint(Node* n) {
         if (n == nullptr) {
             cout << endl;
             return;
@@ -54,9 +64,7 @@ public:
 
         cout << n->value << " ";
         recursivePrint(n->next);
-
     }
-
 
     int getSize() {
         return size;
@@ -71,5 +79,10 @@ int main() {
     list.print(); // Output: 3 2 1
     list.recursivePrint(list.head);
     cout << "Size: " << list.getSize() << endl; // Output: Size: 3
+
+    // Eliminar recursivamente todos los nodos
+    list.recursiveErase(list.head);
+    list.print(); // No debería imprimir nada, lista vacía
+    cout << "Size: " << list.getSize() << endl; // El tamaño no se actualiza aquí porque no se resta dentro de erase
     return 0;
 }
